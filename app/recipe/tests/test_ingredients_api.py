@@ -19,10 +19,6 @@ def create_user(email='user@example.com', password='pass2018'):
     return get_user_model().objects.create_user(email=email, password=password)
 
 
-def detail_url(tag_id):
-    """Create and return a tag detail url"""
-    return reverse('recipe:tag-detail', args=[tag_id])
-
 class PublicIngredientsApiTest(TestCase):
     """Test unauthenticated API requests."""
 
@@ -45,7 +41,7 @@ class PrivateIngredientsApiTest(TestCase):
         self.client.force_authenticate(self.user)
 
     def test_retrieve_ingredients(self):
-        """Test retrieving a list of tags"""
+        """Test retrieving a list of ingredients"""
         Ingredient.objects.create(user=self.user, name='Onion')
         Ingredient.objects.create(user=self.user, name='Carrot')
 
@@ -68,12 +64,3 @@ class PrivateIngredientsApiTest(TestCase):
         self.assertEqual(len(res.data), 1)
         self.assertEqual(res.data[0]['name'], ingredient.name)
         self.assertEqual(res.data[0]['id'], ingredient.id)
-
-        """Test deleting a tag"""
-        tag = Tag.objects.create(user=self.user, name='breakfast')
-        url = detail_url(tag.id)
-        res = self.client.delete(url)
-
-        self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
-        tags = Tag.objects.filter(user=self.user)
-        self.assertFalse(tags.exists())
