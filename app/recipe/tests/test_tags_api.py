@@ -23,6 +23,7 @@ def detail_url(tag_id):
     """Create and return a tag detail url"""
     return reverse('recipe:tag-detail', args=[tag_id])
 
+
 class PublicTagsApiTest(TestCase):
     """Test unauthenticated API requests."""
 
